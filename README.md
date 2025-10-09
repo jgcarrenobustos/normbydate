@@ -59,8 +59,9 @@ do test.do
 
 ## Author
 
-[Your Name]
+Gabo 
+jgcarren@gmail.com
 
 ## License
 
-[Choose appropriate license, e.g., MIT, GPL, etc.]
+MIT License - see LICENSE file for details
