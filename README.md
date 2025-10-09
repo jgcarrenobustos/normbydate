@@ -1,5 +1,12 @@
 # normbydate
 
+![Stata](https://img.shields.io/badge/stata-v17+-blue?logo=stata)
+![Platform](https://img.shields.io/badge/platform-windows%20%7C%20macOS%20%7C%20linux-lightgrey)
+![License](https://img.shields.io/badge/license-MIT-green)
+![Version](https://img.shields.io/badge/version-1.8-orange)
+![GitHub repo size](https://img.shields.io/github/repo-size/jgcarrenobustos/normbydate)
+![GitHub last commit](https://img.shields.io/github/last-commit/jgcarrenobustos/normbydate)
+
 A Stata command for normalizing variables by their value at a baseline date.
 
 ## Description
@@ -59,8 +66,9 @@ do test.do
 
 ## Author
 
-Gabo 
-jgcarren@gmail.com
+**Gabo**  
+📧 jgcarren@gmail.com  
+🐙 [GitHub](https://github.com/jgcarrenobustos)
 
 ## License
 
