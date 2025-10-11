@@ -1,5 +1,5 @@
 {smcl}
-{* *! version 1.8.1 29aug2025}
+{* *! version 1.8 11oct2025}
 {title:Title}
 {phang}
 {bf:normbydate} — Normalize a variable by its value at a baseline date (daily / monthly / yearly)
@@ -49,7 +49,11 @@ If {cmd:by()} is omitted, this is allowed {bf:only} when the estimation sample c
 
 {title:Examples}
 
-{bf:Daily data}
+{bf:Quick test}
+{cmd:. sysuse xtline1, clear}
+{cmd:. normbydate calories, by(person) date("19mar2002") datevar(day)}
+
+{bf:Daily data (with return values)}
 {cmd:. sysuse xtline1, clear}
 {cmd:. format day %td}
 {cmd:. normbydate calories, by(person) date("19mar2002") datevar(day)}

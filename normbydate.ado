@@ -1,4 +1,4 @@
-*! normbydate.ado 1.8 — strict normalization by value at a baseline date; by() optional iff unique baseline obs
+*! normbydate.ado 1.8 11oct2025 — strict normalization by value at a baseline date; by() optional iff unique baseline obs
 program define normbydate, rclass
     version 17.0
     // Syntax:
