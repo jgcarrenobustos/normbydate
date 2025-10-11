@@ -1,8 +1,7 @@
 *-------------------------------------------------------------------------------
-* test_clean.do - clean, self-contained tests for normbydate (no di/display)
+* test.do - clean, self-contained tests for normbydate (no di/display)
 * Created: 2025-10-11
 * Purpose: Run a set of small, isolated tests using only Stata built-in datasets.
-* Notes: Uses only comment headers and standard Stata output (no 'di', 'di as' or 'display').
 *-------------------------------------------------------------------------------
 
 clear all

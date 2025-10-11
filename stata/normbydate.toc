@@ -1,0 +1,10 @@
+package: normbydate
+version: 1.0
+
+files:
+  - normbydate.ado
+  - normbydate.sthlp
+  - test.do
+
+help:
+  normbydate: normbydate.sthlp
