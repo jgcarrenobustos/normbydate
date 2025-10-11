@@ -1,0 +1,17 @@
+*-------------------------------------------------------------------------------
+* normbydate.toc
+* Table of contents for Stata net install
+* Created: 11 Oct 2025
+*-------------------------------------------------------------------------------
+
+package: normbydate
+version: 1.0
+
+files:
+  - normbydate.ado
+  - normbydate.sthlp
+  - test.do
+  - README.md
+
+help:
+  normbydate: normbydate.sthlp
