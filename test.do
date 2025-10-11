@@ -8,8 +8,42 @@
 clear all
 set more off
 
+* Add current directory to adopath for normbydate.ado
+adopath ++ .
 * Alternative: add explicit path
 adopath ++ "c:\Users\jgcar\Mi unidad\Research\__other\StataAdo"
+
+
+
+
+
+*===============================================================================
+
+
+clear all
+
+cd "C:\Users\jgcar\Mi unidad\Research\__other\StataAdo\normbydate"
+use "GrowthClimateDataset", clear
+
+
+*1
+use "GrowthClimateDataset", clear
+keep isocode year gdpCAPppp_wdi
+rename gdpCAPppp_wdi gdp_pc
+keep if year>1990
+keep if year<2010
+
+format year %ty
+normbydate gdp_pc , date("2000") datevar(year) by(isocode)
+
+
+xtset isocode  year
+xtline gdp_pc, overlay legend(off) xtitle(" ")
+graph export "example1_raw.png" , width(1600)
+xtline norm_gdp_pc, overlay legend(off) xtitle(" ") ytitle("Normalized GDP per capita, PPP (WDI)")
+graph export "example1_norm.png" , width(1600)
+
+
 
 *===============================================================================
 * Test 1: Daily data with by() groups
@@ -21,15 +55,14 @@ di as txt "========================================"
 clear
 set obs 50
 
-* Create test data (data is random for every id)
+* Create test data
 gen id = mod(_n-1, 5) + 1
 gen date_num = td(1jan2020) + _n - 1
 format date_num %td
 gen value = 100 + 10*sin(_n/5) + rnormal(0,5)
-sort id date_num
 
 * Test basic functionality
-normbydate value, date("05jan2020") datevar(date_num) by(id)
+normbydate value, date("10feb2020") datevar(date_num) by(id)
 list id date_num value norm_value in 1/10
 
 * Test with custom generate name
@@ -64,7 +97,25 @@ list company month_num sales norm_sales in 1/12
 normbydate sales, date("2020m6") datevar(month_num) by(company) generate(norm_june) replace
 list company month_num sales norm_june in 15/25
 
+*===============================================================================
+* Test 3: Yearly data
+*===============================================================================
+di as txt "========================================"
+di as txt "Test 3: Yearly data"
+di as txt "========================================"
 
+clear
+set obs 20
+
+* Create yearly data
+gen country = mod(_n-1, 2) + 1
+gen year_num = ty(2010) + _n - 1
+format year_num %ty
+gen gdp = 10000 + 1000*country + 500*(_n-10) + rnormal(0,100)
+
+* Test yearly normalization
+normbydate gdp, date("2015") datevar(year_num) by(country)
+list country year_num gdp norm_gdp
 
 *===============================================================================
 * Test 4: Single observation case (no by() required)

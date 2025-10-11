@@ -50,6 +50,20 @@ normbydate sales, date("2020-01") datevar(month) by(region) scale(100)
 normbydate gdp, date("2010") datevar(year) by(country)
 ```
 
+## Example Output
+
+The following figures demonstrate the `normbydate` function using GDP (Gross Domestic Production) per capita data from WDI:
+
+### Before Normalization (Raw Data)
+![Raw GPP per capita data](figures/example1_raw.png)
+*Figure 1: Raw GPP per capita data showing different levels across countries/regions*
+
+### After Normalization (Base Year 2000)
+![Normalized GPP per capita data](figures/example1_norm.png)
+*Figure 2: Same data normalized to year 2000 (base = 1.0) using `normbydate`, showing relative changes over time*
+
+The normalization makes it easy to compare relative trends across different entities, regardless of their absolute levels in the baseline year.
+
 ## Files
 
 - `normbydate.ado`: Main command file
