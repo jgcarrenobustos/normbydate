@@ -1,17 +1,10 @@
-*-------------------------------------------------------------------------------
-* normbydate.toc
-* Table of contents for Stata net install
-* Created: 11 Oct 2025
-*-------------------------------------------------------------------------------
 
-package: normbydate
-version: 1.0
-
-files:
-  - normbydate.ado
-  - normbydate.sthlp
-  - test.do
-  - README.md
-
-help:
-  normbydate: normbydate.sthlp
+v 3
+d normbydate - content page
+d
+d This content page lists the normbydate package and related files.
+d Use the 'net' command in Stata to install the package from this location.
+d
+d Distribution-Date: 11 Oct 2025
+l README README.md   Project README and installation notes
+p normbydate    Normalize a variable by a baseline date (normbydate)
