@@ -18,28 +18,3 @@ f normbydate.sthlp  help file for normbydate
 f test.do           self-contained tests (built-in datasets)
 f README.md         project README
 
-e*-------------------------------------------------------------------------------
-* normbydate.pkg
-* Minimal package descriptor for Stata net install
-* Created: 11 Oct 2025
-*-------------------------------------------------------------------------------
-
-package: normbydate
-version: 1.0
-date: 11 Oct 2025
-title: Normalize a variable by a baseline date (normbydate)
-author: Jose Gabriel Carreno
-contact: jgcarrenobustos@example.com
-url: https://github.com/jgcarrenobustos/normbydate
-license: MIT
-
-description:
-This package provides the `normbydate' ado command and help file. It
-normalizes a variable by its value at a specified baseline date,
-optionally within by-groups. See `normbydate.sthlp' for usage.
-
-files:
-  - normbydate.ado
-  - normbydate.sthlp
-  - test.do
-  - README.md
