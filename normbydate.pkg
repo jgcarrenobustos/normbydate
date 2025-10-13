@@ -1,4 +1,24 @@
-*-------------------------------------------------------------------------------
+* normbydate.pkg
+* Package descriptor using classic .pkg format
+* Created: 11 Oct 2025
+
+v 3
+
+d normbydate --- Normalize a variable by a baseline date
+d
+d This package provides the normbydate ado command and its help file.
+d The command normalizes a variable by its value at a specified baseline
+d date, optionally within by-groups. See the help file for usage and
+d examples.
+d
+d Distribution-Date: 11 Oct 2025
+d
+f normbydate.ado    normbydate ado command
+f normbydate.sthlp  help file for normbydate
+f test.do           self-contained tests (built-in datasets)
+f README.md         project README
+
+e*-------------------------------------------------------------------------------
 * normbydate.pkg
 * Minimal package descriptor for Stata net install
 * Created: 11 Oct 2025
