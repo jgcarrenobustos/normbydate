@@ -1,12 +1,11 @@
 v 3
-d normbydate --- Normalize a variable by a baseline date
-d This package provides the normbydate ado command and its help file.
-d The command normalizes a variable by its value at a specified baseline
-d date, optionally within by-groups. See the help file for usage and
-d examples.
-d Distribution-Date: 11 Oct 2025
-F normbydate.ado    normbydate ado command
-F normbydate.sthlp  help file for normbydate
-F test.do           self-contained tests (built-in datasets)
-F README.md         project README
-
+d normbydate. Normalize a variable by its value at a baseline date
+d
+d normbydate divides a variable by its value at a user-specified baseline
+d date (daily %td, monthly %tm, or yearly %ty), optionally within by-groups.
+d
+d Author: Jose Gabito Carreno, jgcarren@gmail.com
+d Distribution-Date: 20261012
+f normbydate.ado
+f normbydate.sthlp
+f test.do

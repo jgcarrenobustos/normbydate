@@ -1,168 +1,94 @@
 *-------------------------------------------------------------------------------
-* test.do - clean, self-contained tests for normbydate (no di/display)
-* Created: 2025-10-11
-* Purpose: Run a set of small, isolated tests using only Stata built-in datasets.
+* test.do - self-contained tests for normbydate (built-in datasets only)
+* Run from the repository folder:  do test.do
+* Every check uses -assert-, so the script stops at the first failure.
 *-------------------------------------------------------------------------------
 
 clear all
 set more off
 
-* Ensure Stata can find the .ado in this folder
-adopath ++ .
+* Use the .ado in this folder, ahead of any installed copy
+adopath ++ "`c(pwd)'"
+capture program drop normbydate
 
-
-***********************************************************
-* Test 1: Basic daily data using xtline1 (built-in)
-***********************************************************
-
-* Test 1 header
+* Test 1: daily data, by() groups
 sysuse xtline1, clear
+normbydate calories, date("19mar2002") datevar(day) by(person)
+assert r(freq) == "daily"
+assert r(baseline_val) == td(19mar2002)
+assert r(N_groups_miss) == 0
+assert abs(norm_calories - 1) < 1e-12 if day == td(19mar2002)
+bysort person (day): egen double chk = max(cond(day == td(19mar2002), calories, .))
+assert reldif(norm_calories, calories/chk) < 1e-12
+drop chk
 
-* xtline1 has day, calories, person
-describe day calories person
-
-* Basic call: normalize calories at baseline date 19mar2002 by person
-capture noisily normbydate calories, date("19mar2002") datevar(day) by(person)
-if _rc != 0 {
-    * ERROR: normbydate failed in Test 1
-}
-else {
-    * OK: Test 1 completed
-    list person day calories norm_calories in 1/10
+* Test 2: other daily literals give the same baseline
+foreach d in "2002-03-19" "19/03/2002" {
+    normbydate calories, date("`d'") datevar(day) by(person) replace
+    assert r(baseline_val) == td(19mar2002)
 }
 
-
-***********************************************************
-* Test 2: Monthly aggregation and monthly normalization
-***********************************************************
-
-* Test 2 header
+* Test 3: monthly data, several literal styles
 sysuse xtline1, clear
-
-* create monthly date from daily date
 gen mdate = mofd(day)
 format mdate %tm
-
-* aggregate by person and month (mean calories)
-preserve
 collapse (mean) calories, by(person mdate)
-
-describe mdate calories person
-
-capture noisily normbydate calories, date("2002-03") datevar(mdate) by(person)
-if _rc != 0 {
-    * ERROR: normbydate failed in Test 2
-}
-else {
-    * OK: Test 2 completed
-    list person mdate calories norm_calories in 1/10
+foreach d in "2002-03" "2002m3" "Mar 2002" {
+    normbydate calories, date("`d'") datevar(mdate) by(person) replace
+    assert r(freq) == "monthly"
+    assert r(baseline_val) == tm(2002m3)
+    assert abs(norm_calories - 1) < 1e-12 if mdate == tm(2002m3)
 }
 
-restore
-
-
-***********************************************************
-* Test 3: Yearly-like data (synthetic) and custom generate
-***********************************************************
-
-* Test 3 header
+* Test 4: yearly data, generate() and scale()
 clear
 set obs 40
-
-* Create group id and yearly variable
 gen id = mod(_n-1, 5) + 1
-gen year = ty(2000) + floor((_n-1)/4)
+gen year = 2000 + floor((_n-1)/5)
 format year %ty
+gen value = 100 + 5*_n
+normbydate value, date("2001") datevar(year) by(id) generate(val_norm) scale(100)
+assert r(freq) == "yearly"
+assert abs(val_norm - 100) < 1e-10 if year == 2001
+confirm variable val_norm
 
-* Create a value to normalize
-gen value = 100 + 5*_n + rnormal(0,3)
+* Test 5: no by() with a single baseline observation
+clear
+set obs 4
+gen mdate = ym(2002,1) + _n - 1
+format mdate %tm
+gen sales = 100 + 2*_n
+normbydate sales, date("2002-03") datevar(mdate)
+assert abs(norm_sales - sales/106) < 1e-12
 
-list id year value in 1/12
-
-capture noisily normbydate value, date("2001") datevar(year) by(id) generate(val_norm)
-if _rc != 0 {
-    * ERROR: normbydate failed in Test 3
-}
-else {
-    * OK: Test 3 completed
-    list id year value val_norm in 1/12
-}
-
-
-***********************************************************
-* Test 4: Replace option behavior
-***********************************************************
-
-* Test 4 header
+* Test 6: replace option
 sysuse xtline1, clear
-
-* First create a fake existing variable norm_calories to test replace
 gen norm_calories = 999
-
-* Running without replace should return nonzero rc (capture)
 capture normbydate calories, date("19mar2002") datevar(day) by(person)
-if _rc == 0 {
-    * ERROR: Expected failure when generating existing variable without replace
-} 
-else {
-    * OK: normbydate correctly refused to overwrite existing var without replace
-}
+assert _rc == 110
+normbydate calories, date("19mar2002") datevar(day) by(person) replace
+assert norm_calories != 999
 
-* Now run with replace
-capture noisily normbydate calories, date("19mar2002") datevar(day) by(person) replace
-if _rc != 0 {
-    * ERROR: normbydate failed with replace in Test 4
-} 
-else {
-    * OK: Test 4 (replace) completed
-    list person day calories norm_calories in 1/10
-}
-
-
-***********************************************************
-* Test 5: Error cases - invalid date format and no baseline
-***********************************************************
-
-* Test 5 header
+* Test 7: expected errors
 sysuse xtline1, clear
-
-* Invalid date format using td() literal (should error)
 capture normbydate calories, date("td(19mar2002)") datevar(day) by(person)
-if _rc != 0 {
-    * OK: Expected error on invalid date literal
-} 
-else {
-    * ERROR: Expected normbydate to reject td(...) literal
-}
-
-* No observations at baseline (future date) should error
+assert _rc == 198
 capture normbydate calories, date("01jan2030") datevar(day) by(person)
-if _rc != 0 {
-    * OK: Expected error when no baseline observations exist
-} 
-else {
-    * ERROR: Expected failure when no baseline obs exist
-}
+assert _rc == 2000
+capture normbydate calories, date("19mar2002") datevar(day)
+assert _rc == 198
+gen double rawday = day
+format rawday %9.0g
+capture normbydate calories, date("19mar2002") datevar(rawday) by(person)
+assert _rc == 198
 
-
-***********************************************************
-* Test 6: Return values check
-***********************************************************
-
-* Test 6 header
+* Test 8: groups without baseline stay missing, sort order preserved
 sysuse xtline1, clear
-capture noisily normbydate calories, date("19mar2002") datevar(day) by(person)
+gen long order = _n
+drop if person == 1 & day == td(19mar2002)
+normbydate calories, date("19mar2002") datevar(day) by(person)
+assert r(N_groups_miss) == 1
+assert missing(norm_calories) if person == 1
+assert order[_n] > order[_n-1] if _n > 1
 
-* Display r-class returns if command succeeded
-if _rc == 0 {
-    capture confirm scalar r(baseline_val)
-    if _rc == 0 scalar baseline_val_exists = 1
-    capture confirm scalar r(freq)
-    if _rc == 0 scalar freq_exists = 1
-    capture confirm scalar r(N_groups)
-    if _rc == 0 scalar N_groups_exists = 1
-}
-
-* End of tests
-set more on
-* End of test_clean.do
+display as result "All normbydate tests passed."

@@ -1,9 +1,9 @@
 # normbydate
 
-![Stata](https://img.shields.io/badge/stata-v17+-blue?logo=stata)
+![Stata](https://img.shields.io/badge/stata-v14+-blue?logo=stata)
 ![Platform](https://img.shields.io/badge/platform-windows%20%7C%20macOS%20%7C%20linux-lightgrey)
 ![License](https://img.shields.io/badge/license-MIT-green)
-![Version](https://img.shields.io/badge/version-1.8-orange)
+![Version](https://img.shields.io/badge/version-1.9-orange)
 ![GitHub repo size](https://img.shields.io/github/repo-size/jgcarrenobustos/normbydate)
 ![GitHub last commit](https://img.shields.io/github/last-commit/jgcarrenobustos/normbydate)
 
@@ -15,10 +15,18 @@ A Stata command for normalizing variables by their value at a baseline date.
 
 ## Installation
 
+From Stata (14 or newer), install directly from GitHub:
+
 ```stata
-* Download the files and place them in your adopath
-adopath ++ "path/to/normbydate"
+net install normbydate, from("https://raw.githubusercontent.com/jgcarrenobustos/normbydate/main/") replace
+help normbydate
 ```
+
+Note: the URL must be the `raw.githubusercontent.com` one; `https://github.com/...` serves an HTML page and `net install` fails.
+
+To get the test script as well: `net get normbydate, from("https://raw.githubusercontent.com/jgcarrenobustos/normbydate/main/")`.
+
+Alternatively, download `normbydate.ado` and `normbydate.sthlp` and put them in your PERSONAL ado folder (type `sysdir` in Stata to see where it is).
 
 ## Syntax
 
@@ -35,7 +43,7 @@ normbydate varname , date("literal") datevar(varname)
 - `generate(newvar)`: Name of the normalized variable to create. Default: `norm_varname`.
 - `replace`: Allow replacing an existing `generate()` variable.
 - `scale(#)`: Scale factor for the index; default `1`. Use `scale(100)` for base=100.
-- `strictfmt`: Error out if `datevar` is not formatted `%td`, `%tm`, or `%ty`.
+- `strictfmt`: Kept for backward compatibility; `datevar` must always be formatted `%td`, `%tm`, or `%ty`.
 
 ## Examples
 

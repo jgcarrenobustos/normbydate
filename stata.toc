@@ -1,10 +1,4 @@
 v 3
-d normbydate - content page
-
-d This content page lists the normbydate package and related files.
-d Use the 'net' command in Stata to install the package from this location.
+d normbydate: normalize a variable by its value at a baseline date
 d https://github.com/jgcarrenobustos/normbydate
-
-d Distribution-Date: 11 Oct 2025
-l README README.md   Project README and installation notes
-p normbydate    Normalize a variable by a baseline date (normbydate)
+p normbydate Normalize a variable by its value at a baseline date
